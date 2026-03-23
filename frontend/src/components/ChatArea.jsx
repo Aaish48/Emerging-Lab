@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import ReactMarkdown from 'react-markdown'
 
 const SUGGESTIONS = [
   'What is this document about?',
@@ -264,7 +265,7 @@ function Message({ role, text, time }) {
       </div>
 
       <div style={{ maxWidth: '70%', display: 'flex', flexDirection: 'column', gap: 6, alignItems: isUser ? 'flex-end' : 'flex-start' }}>
-        <div style={{
+        <div className="markdown-container" style={{
           padding: '1rem 1.25rem',
           borderRadius: isUser
             ? 'var(--radius-lg) 2px var(--radius-lg) var(--radius-lg)'
@@ -274,9 +275,13 @@ function Message({ role, text, time }) {
           color: isUser ? 'var(--paper)' : 'var(--ink)',
           fontSize: '0.9rem',
           lineHeight: 1.65,
-          whiteSpace: 'pre-wrap',
+          /* Removed white-space: pre-wrap; ReactMarkdown handles spacing now */
         }}>
-          {text}
+          {isUser ? (
+            <div style={{ whiteSpace: 'pre-wrap' }}>{text}</div>
+          ) : (
+            <ReactMarkdown>{text}</ReactMarkdown>
+          )}
         </div>
         <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '0.62rem', color: 'var(--muted)' }}>{time}</span>
       </div>

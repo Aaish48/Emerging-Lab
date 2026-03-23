@@ -94,3 +94,21 @@ body::before {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+/* Ensure Markdown lists and spacing look good */
+.markdown-container ul, .markdown-container ol {
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+.markdown-container p {
+  margin-bottom: 0.5rem;
+}
+
+.markdown-container p:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-container strong {
+  font-weight: 600;
+  color: var(--gold); /* Optional: makes bold text match your theme */
+}

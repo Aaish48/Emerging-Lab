@@ -1,21 +1,20 @@
 import os
+from urllib import response
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
-# import google.generativeai as genai
+import google.generativeai as genai
 from pypdf import PdfReader
 import io
-from openai import OpenAI
+
 
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-client = OpenAI(
-    api_key=os.getenv("GROK_API_KEY"),
-    base_url="https://api.x.ai/v1"
-)
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+model = genai.GenerativeModel("gemini-flash-latest")
 # Store extracted PDF text in memory (keyed by filename)
 pdf_store = {}
 
@@ -90,19 +89,18 @@ User Question: {question}
 Answer:"""
 
     try:
-        response = client.chat.completions.create(
-            model="grok-beta",
-            messages=[
-                {"role": "system", "content": "You are a helpful document assistant."},
-                {"role": "user", "content": prompt}
-            ]
-        )
+        response = model.generate_content(prompt)
+    
+    # Check if the response was blocked by safety filters
+        if not response.candidates or not response.candidates[0].content.parts:
+            return jsonify({"answer": "I cannot answer this due to safety restrictions or an empty response."})
 
-        answer = response.choices[0].message.content
-
+        answer = response.text
         return jsonify({"answer": answer})
 
     except Exception as e:
+    # This will tell you the EXACT error (e.g., "API_KEY_INVALID")
+        print(f"Error: {e}") 
         return jsonify({"error": str(e)}), 500
 
 
