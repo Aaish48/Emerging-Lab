@@ -2,14 +2,13 @@
 app.py - Streamlit Web Interface for Gemini RAG Document QA System
 Upload PDFs and ask questions about them
 """
-
+import pandas as pd
 import streamlit as st
 import os
 from pathlib import Path
 from dotenv import load_dotenv
 from qa import DocumentQA
 import shutil
-
 # Load environment variables
 load_dotenv()
 
